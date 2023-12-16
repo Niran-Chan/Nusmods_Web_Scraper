@@ -76,11 +76,15 @@ def test(URL):
 if __name__ == '__main__':
     chromedriver_autoinstaller.install()
     driver = webdriver.Chrome()
-    Y1S1=['CS1010E','MA1505','MA1512','ME1102','GER1000','UTW1001E'] #no more UTW1001E
+    Y1S1=['CS1010E','MA1505','MA1512','ME1102','GER1000','UTW1001E'] 
     Y1S2=['EG1311','EG2310','MA1513','ME2104','UTC1702E']
-    Y2S1=['CFG1002','CP2106','EE2211','ME2102','ME2112','MLE1010','UTC2706'] #No MLE1010,UTC2706
-    Y2S2=['CFG2002I','CS2040C','CS2107','ME2134','ME2162','UTS2709','UTW2001R']#no UTW2001R
+    Y2S1=['CFG1002','CP2106','EE2211','ME2102','ME2112','MLE1010','UTC2706']
+    Y2S2=['CFG2002I','CS2040C','CS2107','ME2134','ME2162','UTS2709','UTW2001R']
     Y3S1=['EG3611A','ME3163']
-
-    scrape([Y1S1,Y1S2,Y2S1,Y2S2,Y3S1])
+    Y3S2=[]
+    Y4S1=[]
+    Y4S2=[]
+    Y5S1=[]
+    Y5S2=[]
+    scrape([Y1S1,Y1S2,Y2S1,Y2S2,Y3S1,Y3S2,Y4S1,Y4S2,Y5S1,Y5S2])
     #test("https://nusmods.com/courses/ME2121")
