@@ -3,9 +3,9 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
 
-def scrape(courses):
+def scrape(courses,file_name):
     url = "https://nusmods.com/courses/"
-    f = open("modulecontext.txt","w")
+    f = open(file_name,"w")
     year,sem = 1,1;
     missing_modules=[]
     for yr in courses:
@@ -13,13 +13,13 @@ def scrape(courses):
         f.write("Year"+ str(year)+ "\tSemester: " + str(sem) + "\n")
         year = year + 1 if sem == 2 else year
         sem = 1 if sem == 2 else 2
-
+        course_cnt = 1
         for course in yr:
             URL = url + course
             print("[+] Trying " + URL)
             detail_tag = ""
             retry_cnt=0
-            f.write(course + "\t")
+            f.write(str(course_cnt) + " " + course + ", ")
             #100 Tries
             for i in range(100):
                 try:
@@ -31,11 +31,15 @@ def scrape(courses):
                     detail_tag = soup.find('div',id="details")
                     if(detail_tag is None):
                         raise("[-] Required div is not found.Trying again...")
+                    title = detail_tag.find('h1').contents[1]
+                    print(title)
+                    f.write(title + ", ")
                     break;
 
                 except:
                     print("[-] Retrying ",i)
                     retry_cnt+=1
+                    sleep(1)
             
             if(retry_cnt == 100):
                 print( "[-]"+ course + " is not on NUSMods")
@@ -52,6 +56,7 @@ def scrape(courses):
 
             final_content = detail_tag.find('section').find('p').text
             f.write(final_content + "\n")
+            course_cnt +=1
 
         f.write("\n")
     f.close()
@@ -72,7 +77,10 @@ def test(URL):
     #print(p_tags[2].find_all('span'))
     content = detail_tag.find('section').find('p').text
     print(content)
-
+def units_calculator(courses):
+    for yr in courses:
+        year,sem = 0,0
+         
 if __name__ == '__main__':
     chromedriver_autoinstaller.install()
     driver = webdriver.Chrome()
@@ -82,9 +90,11 @@ if __name__ == '__main__':
     Y2S2=['CFG2002I','CS2040C','CS2107','ME2134','ME2162','UTS2709','UTW2001R']
     Y3S1=['EG3611A','ME3163']
     Y3S2=[]
-    Y4S1=[]
+    Y4S1=['LAF1201','ME2115','ME2121','ME2142','ME3242','ME4101A']
     Y4S2=[]
     Y5S1=[]
     Y5S2=[]
-    scrape([Y1S1,Y1S2,Y2S1,Y2S2,Y3S1,Y3S2,Y4S1,Y4S2,Y5S1,Y5S2])
+    #For custom semesters, ensure to line them up according to their year and sem,
+    scrape([[],[],[],[],[Y3S1],[],[Y4S1]],"modulecontext.txt")
+    #scrape([Y1S1,Y1S2,Y2S1,Y2S2,Y3S1,Y3S2,Y4S1,Y4S2,Y5S1,Y5S2],"modulecontext.txt")
     #test("https://nusmods.com/courses/ME2121")
